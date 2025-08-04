@@ -1,0 +1,248 @@
+/* Layout Patterns - Matching beginner-react-challenges.webdevcody.com */
+
+/* Hero Section Layouts */
+.hero {
+  @apply relative overflow-hidden bg-white dark:bg-gray-900;
+}
+
+.hero-content {
+  @apply container mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32;
+}
+
+.hero-title {
+  @apply text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-6xl;
+}
+
+.hero-subtitle {
+  @apply mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300;
+}
+
+.hero-actions {
+  @apply mt-8 flex flex-col gap-4 sm:flex-row sm:gap-6;
+}
+
+/* Grid Layouts */
+.grid-auto-fit {
+  @apply grid gap-6;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-auto-fill {
+  @apply grid gap-6;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.grid-responsive {
+  @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+}
+
+/* Course/Product Card Layouts (inspired by beginner-react-challenges) */
+.course-grid {
+  @apply grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3;
+}
+
+.course-card {
+  @apply relative overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow-md dark:bg-gray-800 dark:border-gray-700;
+}
+
+.course-card.group {
+  /* Group class should be applied directly in HTML */
+}
+
+.course-card-header {
+  @apply relative aspect-video overflow-hidden bg-gray-100 dark:bg-gray-700;
+}
+
+.course-card-content {
+  @apply p-6;
+}
+
+.course-card-title {
+  @apply mb-2 text-lg font-semibold text-gray-900 dark:text-white;
+}
+
+.course-card-description {
+  @apply mb-4 text-sm text-gray-600 dark:text-gray-300;
+}
+
+.course-card-footer {
+  @apply flex items-center justify-between;
+}
+
+.course-tag {
+  @apply inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200;
+}
+
+.course-tag-free {
+  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+}
+
+.course-tag-premium {
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+}
+
+/* Pricing Section */
+.pricing-grid {
+  @apply grid grid-cols-1 gap-8 lg:grid-cols-3;
+}
+
+.pricing-card {
+  @apply relative rounded-lg border bg-white p-8 shadow-sm dark:bg-gray-800 dark:border-gray-700;
+}
+
+.pricing-card-popular {
+  @apply border-green-500 ring-1 ring-green-500;
+}
+
+.pricing-header {
+  @apply text-center;
+}
+
+.pricing-title {
+  @apply text-lg font-semibold text-gray-900 dark:text-white;
+}
+
+.pricing-price {
+  @apply mt-4 text-4xl font-bold text-gray-900 dark:text-white;
+}
+
+.pricing-period {
+  @apply text-sm text-gray-600 dark:text-gray-300;
+}
+
+.pricing-features {
+  @apply mt-8 space-y-4;
+}
+
+.pricing-feature {
+  @apply flex items-center;
+}
+
+.pricing-feature-icon {
+  @apply h-5 w-5 text-green-600;
+}
+
+.pricing-feature-text {
+  @apply ml-3 text-sm text-gray-700 dark:text-gray-300;
+}
+
+/* Navigation Layouts */
+.nav-main {
+  @apply sticky top-0 z-50 border-b bg-white/80 backdrop-blur-sm dark:bg-gray-900/80 dark:border-gray-700;
+}
+
+.nav-container {
+  @apply container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8;
+}
+
+.nav-logo {
+  @apply flex items-center space-x-2;
+}
+
+.nav-menu {
+  @apply hidden space-x-8 md:flex;
+}
+
+.nav-link {
+  @apply text-sm font-medium text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400;
+}
+
+.nav-actions {
+  @apply flex items-center space-x-4;
+}
+
+/* Footer Layouts */
+.footer {
+  @apply border-t bg-gray-50 dark:bg-gray-900 dark:border-gray-700;
+}
+
+.footer-container {
+  @apply container mx-auto px-4 py-12 sm:px-6 lg:px-8;
+}
+
+.footer-grid {
+  @apply grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4;
+}
+
+.footer-section {
+  @apply space-y-4;
+}
+
+.footer-title {
+  @apply text-sm font-semibold text-gray-900 dark:text-white;
+}
+
+.footer-links {
+  @apply space-y-2;
+}
+
+.footer-link {
+  @apply text-sm text-gray-600 hover:text-green-600 dark:text-gray-400 dark:hover:text-green-400;
+}
+
+/* Dashboard Layouts */
+.dashboard-container {
+  @apply flex min-h-screen bg-gray-50 dark:bg-gray-900;
+}
+
+.dashboard-sidebar {
+  @apply hidden w-64 bg-white shadow-sm dark:bg-gray-800 lg:block;
+}
+
+.dashboard-main {
+  @apply flex-1 overflow-hidden;
+}
+
+.dashboard-header {
+  @apply border-b bg-white px-6 py-4 dark:bg-gray-800 dark:border-gray-700;
+}
+
+.dashboard-content {
+  @apply p-6;
+}
+
+/* Form Layouts */
+.form-container {
+  @apply mx-auto max-w-md space-y-6;
+}
+
+.form-group {
+  @apply space-y-2;
+}
+
+.form-row {
+  @apply grid grid-cols-1 gap-4 sm:grid-cols-2;
+}
+
+.form-actions {
+  @apply flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0;
+}
+
+/* Stats/Metrics Layouts */
+.stats-grid {
+  @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4;
+}
+
+.stat-card {
+  @apply overflow-hidden rounded-lg bg-white px-4 py-5 shadow dark:bg-gray-800;
+}
+
+.stat-title {
+  @apply truncate text-sm font-medium text-gray-500 dark:text-gray-400;
+}
+
+.stat-value {
+  @apply mt-1 text-3xl font-semibold text-gray-900 dark:text-white;
+}
+
+.stat-change {
+  @apply mt-2 flex items-baseline text-sm;
+}
+
+.stat-change-positive {
+  @apply text-green-600 dark:text-green-400;
+}
+
+.stat-change-negative {
+  @apply text-red-600 dark:text-red-400;
+}

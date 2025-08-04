@@ -63,7 +63,7 @@ public class AuthService {
         user.setUpdatedAt(LocalDateTime.now());
 
         // Assign default user role
-        Role userRole = roleRepository.findByName("user")
+        Role userRole = roleRepository.findByName("USER")
                 .orElseThrow(() -> new RuntimeException("Default user role not found"));
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);

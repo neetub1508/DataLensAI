@@ -1,0 +1,25 @@
+-- Initial seed data for Data Lens AI platform
+-- Version: 1.0.0
+-- Date: 2025-08-04
+-- Description: Insert default admin user and sample data
+
+-- Insert default admin user (password: admin123)
+-- Note: In production, this should be changed immediately
+INSERT INTO users (email, password_hash, first_name, last_name, email_verified) VALUES
+('admin@datalens.ai', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System', 'Administrator', TRUE);
+
+-- Assign ADMIN role to the default admin user
+INSERT INTO user_roles (user_id, role_id)
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email = 'admin@datalens.ai' AND r.name = 'ADMIN';
+
+-- Insert sample regular user
+INSERT INTO users (email, password_hash, first_name, last_name, email_verified) VALUES
+('user@datalens.ai', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Sample', 'User', TRUE);
+
+-- Assign USER role to the sample user
+INSERT INTO user_roles (user_id, role_id)
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email = 'user@datalens.ai' AND r.name = 'USER';

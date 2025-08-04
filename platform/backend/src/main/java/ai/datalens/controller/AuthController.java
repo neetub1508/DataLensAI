@@ -3,6 +3,7 @@ package ai.datalens.controller;
 import ai.datalens.dto.request.LoginRequest;
 import ai.datalens.dto.request.RegisterRequest;
 import ai.datalens.dto.response.AuthResponse;
+import ai.datalens.dto.response.ErrorResponse;
 import ai.datalens.dto.response.UserResponse;
 import ai.datalens.service.AuthService;
 import jakarta.validation.Valid;

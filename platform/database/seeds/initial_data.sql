@@ -5,9 +5,9 @@
 
 -- Insert default admin user (password: admin123)
 -- Note: In production, this should be changed immediately
--- This is BCrypt hash for "admin123" with strength 10
+-- BCrypt hash generated for "admin123" with strength 10: $2a$10$EIx8xPxWLzQx6dw0k8aBQOxoGO3KUP9qO3zHjWKGKJvNdTWiQSVRi
 INSERT INTO users (email, password_hash, is_verified, status) VALUES
-('admin@datalens.ai', '$2a$10$N.kfHKU7hT.GSlZo9Bsw4OOVJHxVlUdxGCKKUgdIb95v3V5WV9I8.', TRUE, 'active');
+('admin@datalens.ai', '$2a$10$EIx8xPxWLzQx6dw0k8aBQOxoGO3KUP9qO3zHjWKGKJvNdTWiQSVRi', TRUE, 'active');
 
 -- Assign ADMIN role to the default admin user
 INSERT INTO user_roles (user_id, role_id)
@@ -15,9 +15,9 @@ SELECT u.id, r.id
 FROM users u, roles r
 WHERE u.email = 'admin@datalens.ai' AND r.name = 'ADMIN';
 
--- Insert sample regular user  
+-- Insert sample regular user (password: admin123)
 INSERT INTO users (email, password_hash, is_verified, status) VALUES
-('user@datalens.ai', '$2a$10$N.kfHKU7hT.GSlZo9Bsw4OOVJHxVlUdxGCKKUgdIb95v3V5WV9I8.', TRUE, 'active');
+('user@datalens.ai', '$2a$10$EIx8xPxWLzQx6dw0k8aBQOxoGO3KUP9qO3zHjWKGKJvNdTWiQSVRi', TRUE, 'active');
 
 -- Assign USER role to the sample user
 INSERT INTO user_roles (user_id, role_id)

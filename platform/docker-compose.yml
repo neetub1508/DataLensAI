@@ -6,17 +6,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: datalensai
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=trust"
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/migrations:/docker-entrypoint-initdb.d/migrations:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d datalensai"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
     networks:
       - datalens_network
     restart: unless-stopped
@@ -46,6 +46,7 @@ services:
       DB_NAME: datalensai
       DB_USER: postgres
       DB_PASSWORD: postgres
+      PGPASSWORD: postgres
     volumes:
       - ./database:/database:ro
     networks:
@@ -56,7 +57,9 @@ services:
     command: >
       sh -c "
         echo 'Running database migrations...'
+        apk add --no-cache postgresql-client
         cd /database
+        chmod +x ./migrate.sh
         ./migrate.sh --with-seeds
         echo 'Migration completed'
       "

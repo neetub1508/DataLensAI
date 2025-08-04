@@ -32,11 +32,22 @@ log_error() {
 # Wait for database to be ready
 wait_for_db() {
     log_info "Waiting for database to be ready..."
-    until PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c '\q'; do
-        log_warn "Database is unavailable - sleeping"
-        sleep 1
+    local max_attempts=60
+    local attempt=0
+    
+    while [ $attempt -lt $max_attempts ]; do
+        if PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c '\q' >/dev/null 2>&1; then
+            log_info "Database is ready!"
+            return 0
+        fi
+        
+        attempt=$((attempt + 1))
+        log_warn "Database is unavailable - attempt $attempt/$max_attempts - sleeping"
+        sleep 2
     done
-    log_info "Database is ready!"
+    
+    log_error "Database failed to become available after $max_attempts attempts"
+    exit 1
 }
 
 # Apply migrations

@@ -5,8 +5,8 @@
 
 -- Insert default admin user (password: admin123)
 -- Note: In production, this should be changed immediately
-INSERT INTO users (email, password_hash, first_name, last_name, email_verified) VALUES
-('admin@datalens.ai', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System', 'Administrator', TRUE);
+INSERT INTO users (email, password_hash, is_verified, status) VALUES
+('admin@datalens.ai', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', TRUE, 'active');
 
 -- Assign ADMIN role to the default admin user
 INSERT INTO user_roles (user_id, role_id)
@@ -15,8 +15,8 @@ FROM users u, roles r
 WHERE u.email = 'admin@datalens.ai' AND r.name = 'ADMIN';
 
 -- Insert sample regular user
-INSERT INTO users (email, password_hash, first_name, last_name, email_verified) VALUES
-('user@datalens.ai', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Sample', 'User', TRUE);
+INSERT INTO users (email, password_hash, is_verified, status) VALUES
+('user@datalens.ai', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', TRUE, 'active');
 
 -- Assign USER role to the sample user
 INSERT INTO user_roles (user_id, role_id)

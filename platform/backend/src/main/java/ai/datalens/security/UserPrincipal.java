@@ -54,7 +54,7 @@ public class UserPrincipal implements UserDetails {
                 user.getId(),
                 user.getEmail(),
                 user.getPasswordHash(),
-                "active".equals(user.getStatus()),
+                "ACTIVE".equals(user.getStatus()),
                 true, // accountNonExpired
                 true, // accountNonLocked
                 true, // credentialsNonExpired

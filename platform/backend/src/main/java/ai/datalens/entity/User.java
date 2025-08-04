@@ -40,7 +40,7 @@ public class User extends BaseEntity {
     @NotBlank
     @Size(max = 20)
     @Column(name = "status", nullable = false)
-    private String status = "active";
+    private String status = "ACTIVE";
 
     @Column(name = "verification_token")
     private String verificationToken;

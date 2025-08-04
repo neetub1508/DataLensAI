@@ -106,8 +106,9 @@ FROM roles r, permissions p
 WHERE r.name = 'user' AND p.name = 'user:read';
 
 -- Insert default admin user (password: admin123, hashed with BCrypt)
+-- Updated 2025-08-04: Fixed BCrypt hash to ensure login works correctly
 INSERT INTO users (email, password_hash, is_verified, status) VALUES
-    ('admin@datalens.ai', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LeZrCLbMNb4KqFi3K', true, 'active');
+    ('admin@datalens.ai', '$2a$10$uqJ53YavHAam/jRBvGx4zud2dtG8zEIefO3fcA5n45uChLQIdAQYK', true, 'active');
 
 -- Assign admin role to default admin user
 INSERT INTO user_roles (user_id, role_id)

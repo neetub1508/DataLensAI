@@ -79,6 +79,9 @@ spring:
     endpoint:
       health:
         show-details: when-authorized
+    health:
+      mail:
+        enabled: false
   
   # Profile Configuration
   profiles:

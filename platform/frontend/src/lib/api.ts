@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { toast } from 'react-hot-toast'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
 
 class ApiClient {
   private client: AxiosInstance
@@ -19,13 +19,27 @@ class ApiClient {
   }
 
   private setupInterceptors() {
-    // Request interceptor to add auth token
+    // Request interceptor to add auth token and project context
     this.client.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem('access_token')
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
+        
+        // Add current project ID to headers if available
+        const currentProject = localStorage.getItem('project-store')
+        if (currentProject) {
+          try {
+            const projectStore = JSON.parse(currentProject)
+            if (projectStore.state?.currentProject?.id) {
+              config.headers['X-Project-ID'] = projectStore.state.currentProject.id
+            }
+          } catch (error) {
+            console.warn('Failed to parse project store:', error)
+          }
+        }
+        
         return config
       },
       (error) => {
@@ -180,6 +194,69 @@ class ApiClient {
 
   async createPermission(data: any) {
     const response = await this.client.post('/permissions/', data)
+    return response.data
+  }
+
+  // Project methods
+  async getUserProjects() {
+    const response = await this.client.get('/projects')
+    return response.data
+  }
+
+  async createProject(data: { name: string; description?: string; settings?: string }) {
+    const response = await this.client.post('/projects', data)
+    return response.data
+  }
+
+  async getProject(projectId: string) {
+    const response = await this.client.get(`/projects/${projectId}`)
+    return response.data
+  }
+
+  async updateProject(projectId: string, data: { name: string; description?: string; settings?: string }) {
+    const response = await this.client.put(`/projects/${projectId}`, data)
+    return response.data
+  }
+
+  async deleteProject(projectId: string) {
+    const response = await this.client.delete(`/projects/${projectId}`)
+    return response.data
+  }
+
+  async archiveProject(projectId: string) {
+    const response = await this.client.patch(`/projects/${projectId}/archive`)
+    return response.data
+  }
+
+  async restoreProject(projectId: string) {
+    const response = await this.client.patch(`/projects/${projectId}/restore`)
+    return response.data
+  }
+
+  async addProjectMember(projectId: string, memberId: string) {
+    const response = await this.client.post(`/projects/${projectId}/members/${memberId}`)
+    return response.data
+  }
+
+  async removeProjectMember(projectId: string, memberId: string) {
+    const response = await this.client.delete(`/projects/${projectId}/members/${memberId}`)
+    return response.data
+  }
+
+  async searchProjects(query: string) {
+    const response = await this.client.get('/projects/search', {
+      params: { q: query }
+    })
+    return response.data
+  }
+
+  async getUserActiveProjectCount() {
+    const response = await this.client.get('/projects/count')
+    return response.data
+  }
+
+  async checkProjectAccess(projectId: string) {
+    const response = await this.client.get(`/projects/${projectId}/access`)
     return response.data
   }
 }

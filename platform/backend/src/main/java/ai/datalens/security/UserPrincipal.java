@@ -62,6 +62,7 @@ public class UserPrincipal implements UserDetails {
         );
     }
 
+
     public UUID getId() {
         return id;
     }
@@ -117,4 +118,5 @@ public class UserPrincipal implements UserDetails {
     public int hashCode() {
         return id.hashCode();
     }
+
 }

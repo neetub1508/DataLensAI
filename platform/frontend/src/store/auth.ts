@@ -13,6 +13,7 @@ interface AuthStore extends AuthState {
   requestPasswordReset: (email: string) => Promise<void>
   resetPassword: (token: string, newPassword: string) => Promise<void>
   setLoading: (loading: boolean) => void
+  setToken: (token: string) => void
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -144,6 +145,16 @@ export const useAuthStore = create<AuthStore>()(
 
       setLoading: (loading: boolean) => {
         set({ isLoading: loading })
+      },
+
+      setToken: (token: string) => {
+        localStorage.setItem('access_token', token)
+        set({
+          token,
+          isAuthenticated: true,
+        })
+        // Refresh user data with new token
+        get().refreshUser()
       },
     }),
     {

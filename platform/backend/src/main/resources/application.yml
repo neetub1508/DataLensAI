@@ -122,6 +122,8 @@ app:
     allowed-methods: GET,POST,PUT,DELETE,OPTIONS
     allowed-headers: "*"
     allow-credentials: true
+  oauth2:
+    authorized-redirect-uri: http://localhost:3000/auth/callback
   
   # Email Configuration
   mail:

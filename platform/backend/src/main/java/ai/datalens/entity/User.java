@@ -21,9 +21,8 @@ public class User extends BaseEntity {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @NotBlank
     @Size(max = 255)
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash")
     private String passwordHash;
 
     @Column(name = "is_verified", nullable = false)
@@ -50,6 +49,14 @@ public class User extends BaseEntity {
 
     @Column(name = "password_reset_token_expires_at")
     private LocalDateTime passwordResetTokenExpiresAt;
+
+    @Size(max = 50)
+    @Column(name = "provider")
+    private String provider = "LOCAL";
+
+    @Size(max = 255)
+    @Column(name = "provider_id")
+    private String providerId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -150,6 +157,30 @@ public class User extends BaseEntity {
 
     public void setPasswordResetTokenExpiresAt(LocalDateTime passwordResetTokenExpiresAt) {
         this.passwordResetTokenExpiresAt = passwordResetTokenExpiresAt;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public Boolean getEmailVerified() {
+        return isVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.isVerified = emailVerified;
     }
 
     // Utility methods

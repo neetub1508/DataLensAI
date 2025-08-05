@@ -34,6 +34,7 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
+
     @Bean
     public JwtAuthenticationFilter authenticationJwtTokenFilter() {
         return new JwtAuthenticationFilter();
@@ -65,6 +66,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/oauth2/**").permitAll()
+                        .requestMatchers("/login/oauth2/**").permitAll()
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/test/**").permitAll()
                         .requestMatchers("/api/blog/posts/**").permitAll()
@@ -73,6 +76,17 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated()
                 );
+
+        // OAuth2 login temporarily disabled until proper configuration is set up
+        // if (customOAuth2UserService != null && oAuth2AuthenticationSuccessHandler != null && oAuth2AuthenticationFailureHandler != null) {
+        //     http.oauth2Login(oauth2 -> oauth2
+        //             .userInfoEndpoint(userInfo -> userInfo
+        //                     .userService(customOAuth2UserService)
+        //             )
+        //             .successHandler(oAuth2AuthenticationSuccessHandler)
+        //             .failureHandler(oAuth2AuthenticationFailureHandler)
+        //     );
+        // }
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

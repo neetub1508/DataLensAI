@@ -1,10 +1,12 @@
 package ai.datalens.dto.response;
 
+import ai.datalens.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class UserResponse {
 
@@ -31,6 +33,20 @@ public class UserResponse {
 
     // Constructors
     public UserResponse() {}
+
+    public UserResponse(User user) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.isVerified = user.getIsVerified();
+        this.status = user.getStatus();
+        this.locale = user.getLocale();
+        this.createdAt = user.getCreatedAt();
+        this.updatedAt = user.getUpdatedAt();
+        this.lastLoginAt = user.getLastLoginAt();
+        this.roles = user.getRoles() != null ? 
+            user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet()) : null;
+        // Note: permissions would need to be calculated from roles
+    }
 
     public UserResponse(UUID id, String email, Boolean isVerified, String status, 
                        String locale, LocalDateTime createdAt, LocalDateTime updatedAt,

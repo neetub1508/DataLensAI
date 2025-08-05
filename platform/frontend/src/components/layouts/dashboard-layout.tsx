@@ -14,7 +14,9 @@ import {
   Cog6ToothIcon,
   ChartBarIcon,
   UsersIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon,
+  PencilSquareIcon,
+  DocumentTextIcon
 } from '@heroicons/react/24/outline'
 
 interface DashboardLayoutProps {
@@ -28,6 +30,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: ChartBarIcon, current: true },
+    { name: 'My Blog Posts', href: '/dashboard/blog', icon: PencilSquareIcon, current: false },
+    { name: 'Blog Approval', href: '/dashboard/admin/blog', icon: DocumentTextIcon, current: false, adminOnly: true },
     { name: 'Users', href: '/dashboard/users', icon: UsersIcon, current: false, adminOnly: true },
     { name: 'Roles', href: '/dashboard/roles', icon: ShieldCheckIcon, current: false, adminOnly: true },
     { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon, current: false },

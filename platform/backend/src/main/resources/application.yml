@@ -5,9 +5,9 @@ spring:
   
   # Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5433/datalens_ai
+    url: jdbc:postgresql://localhost:5433/datalensai
     username: postgres
-    password: password
+    password: postgres
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 20000

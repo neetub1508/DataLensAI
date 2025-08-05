@@ -1,9 +1,0 @@
-[build]
-builder = "NIXPACKS"
-buildCommand = "mvn clean package -DskipTests"
-
-[deploy]
-startCommand = "java -jar target/datalens-ai-backend-*.jar"
-healthcheckPath = "/api/v1/actuator/health"
-healthcheckTimeout = 300
-restartPolicyType = "ON_FAILURE"

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { HTTP_METHODS } from '@/constants'
+import { HTTP_METHODS, API_CONFIG, EXAMPLE_URLS } from '@/constants'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
@@ -35,7 +35,7 @@ export default function NewBlogPostPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/admin/categories`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/admin/categories`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -79,7 +79,7 @@ export default function NewBlogPostPage() {
         tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : []
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/posts`, {
         method: HTTP_METHODS.POST,
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -196,7 +196,7 @@ export default function NewBlogPostPage() {
             value={formData.featuredImageUrl}
             onChange={handleInputChange}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="https://example.com/image.jpg"
+            placeholder={EXAMPLE_URLS.IMAGE_PLACEHOLDER}
           />
         </div>
 

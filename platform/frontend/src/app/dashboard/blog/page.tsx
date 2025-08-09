@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BLOG_POST_STATUS, HTTP_METHODS } from '@/constants'
+import { BLOG_POST_STATUS, HTTP_METHODS, API_CONFIG } from '@/constants'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
 
@@ -31,7 +31,7 @@ export default function BlogManagementPage() {
   const fetchUserPosts = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/my-posts`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/my-posts`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ export default function BlogManagementPage() {
 
   const submitForApproval = async (postId: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/${postId}/submit`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/posts/${postId}/submit`, {
         method: HTTP_METHODS.POST,
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -81,7 +81,7 @@ export default function BlogManagementPage() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/${postId}`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/posts/${postId}`, {
         method: HTTP_METHODS.DELETE,
         headers: {
           'Authorization': `Bearer ${token}`,

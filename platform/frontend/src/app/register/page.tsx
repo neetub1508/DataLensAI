@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { DEV_URLS } from '@/constants'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
@@ -86,7 +87,7 @@ export default function RegisterPage() {
 
   const handleSocialLogin = async (provider: string) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || DEV_URLS.BACKEND_API
       // Remove any trailing /api/v1 from backendUrl and ensure we build the correct path
       const baseUrl = backendUrl.replace(/\/api\/v1\/?$/, '')
       const apiUrl = `${baseUrl}/api/v1/oauth2/authorization/${provider}`

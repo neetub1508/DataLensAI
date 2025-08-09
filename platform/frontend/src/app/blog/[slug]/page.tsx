@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { PublicLayout } from '@/components/layouts/public-layout'
+import { API_CONFIG } from '@/constants'
 
 interface BlogPost {
   id: string
@@ -42,7 +43,7 @@ export default function BlogPostPage() {
   const fetchPost = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/${slug}`)
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/posts/${slug}`)
       
       if (response.ok) {
         const data = await response.json()

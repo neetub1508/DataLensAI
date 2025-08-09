@@ -1,6 +1,8 @@
+import { DEV_URLS } from './urls'
+
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api',
-  FALLBACK_URL: 'http://localhost:8000/api/v1',
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || DEV_URLS.BACKEND_API_LEGACY,
+  FALLBACK_URL: DEV_URLS.BACKEND_API_V1,
   TIMEOUT: 30000,
 } as const
 

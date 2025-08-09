@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuthStore } from '@/store/auth'
+import { DOMAIN_URLS } from '@/constants'
 import { 
   ChartBarIcon, 
   UsersIcon, 
@@ -58,7 +59,7 @@ export function Dashboard() {
     },
     {
       id: 3,
-      user: 'admin@datalens.ai',
+      user: DOMAIN_URLS.ADMIN_EMAIL,
       action: 'System backup completed',
       time: '3 hours ago',
     },

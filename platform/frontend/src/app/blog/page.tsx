@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { PublicLayout } from '@/components/layouts/public-layout'
+import { API_CONFIG } from '@/constants'
 
 interface BlogPost {
   id: string
@@ -45,12 +46,12 @@ export default function BlogPage() {
   const fetchPosts = async () => {
     try {
       setLoading(true)
-      let url = `${process.env.NEXT_PUBLIC_API_URL}/blog/posts?size=12`
+      let url = `${API_CONFIG.BASE_URL}/blog/posts?size=12`
       
       if (selectedCategory) {
-        url = `${process.env.NEXT_PUBLIC_API_URL}/blog/posts/category/${selectedCategory}?size=12`
+        url = `${API_CONFIG.BASE_URL}/blog/posts/category/${selectedCategory}?size=12`
       } else if (searchQuery) {
-        url = `${process.env.NEXT_PUBLIC_API_URL}/blog/posts/search?query=${encodeURIComponent(searchQuery)}&size=12`
+        url = `${API_CONFIG.BASE_URL}/blog/posts/search?query=${encodeURIComponent(searchQuery)}&size=12`
       }
 
       const response = await fetch(url)
@@ -70,7 +71,7 @@ export default function BlogPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/categories`)
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/categories`)
       if (response.ok) {
         const data = await response.json()
         setCategories(data)

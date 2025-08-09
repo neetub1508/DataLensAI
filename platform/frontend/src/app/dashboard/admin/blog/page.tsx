@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { HTTP_METHODS } from '@/constants'
+import { HTTP_METHODS, API_CONFIG } from '@/constants'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
 
@@ -39,7 +39,7 @@ export default function AdminBlogManagementPage() {
   const fetchPendingPosts = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/admin/pending-posts`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/admin/pending-posts`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ export default function AdminBlogManagementPage() {
 
   const approvePost = async (postId: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/admin/posts/${postId}/approve`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/admin/posts/${postId}/approve`, {
         method: HTTP_METHODS.POST,
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -89,7 +89,7 @@ export default function AdminBlogManagementPage() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/admin/posts/${postId}/reject`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/blog/admin/posts/${postId}/reject`, {
         method: HTTP_METHODS.POST,
         headers: {
           'Authorization': `Bearer ${token}`,

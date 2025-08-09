@@ -1,11 +1,12 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { toast } from 'react-hot-toast'
-import { API_CONFIG, API_ENDPOINTS, STORAGE_KEYS, DEFAULT_LOCALE, LocaleType } from '../constants'
+import { API_CONFIG, API_ENDPOINTS, STORAGE_KEYS, DEFAULT_LOCALE } from '../constants'
 
 const API_URL = API_CONFIG.BASE_URL
 
 class ApiClient {
   private client: AxiosInstance
+  private refreshTokenPromise: Promise<any> | null = null
 
   constructor() {
     this.client = axios.create({
@@ -60,21 +61,32 @@ class ApiClient {
           const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN)
           if (refreshToken) {
             try {
-              const response = await this.client.post(API_ENDPOINTS.AUTH.REFRESH, {
-                refresh_token: refreshToken,
-              })
+              // Use existing promise if refresh is already in progress
+              if (!this.refreshTokenPromise) {
+                this.refreshTokenPromise = this.client.post(API_ENDPOINTS.AUTH.REFRESH, {
+                  refresh_token: refreshToken,
+                })
+              }
+              
+              const response = await this.refreshTokenPromise
               
               const { access_token, refresh_token: newRefreshToken } = response.data
               localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, access_token)
               localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken)
               
+              // Clear the refresh promise
+              this.refreshTokenPromise = null
+              
               // Retry original request
               originalRequest.headers.Authorization = `Bearer ${access_token}`
               return this.client(originalRequest)
             } catch (refreshError) {
+              // Clear the refresh promise on error
+              this.refreshTokenPromise = null
+              
               // Refresh failed, redirect to login
-              localStorage.removeItem('access_token')
-              localStorage.removeItem('refresh_token')
+              localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
+              localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
               window.location.href = '/login'
               return Promise.reject(refreshError)
             }

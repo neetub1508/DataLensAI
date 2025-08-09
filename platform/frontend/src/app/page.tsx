@@ -17,11 +17,8 @@ export default function Page() {
 
   useEffect(() => {
     if (mounted) {
-      // Initialize auth state on page load
-      const token = localStorage.getItem('access_token')
-      if (token && !isAuthenticated) {
-        useAuthStore.getState().refreshUser()
-      }
+      // Auth state is already initialized by the store
+      // No need to call refreshUser here to avoid duplicate calls
     }
   }, [mounted, isAuthenticated])
 

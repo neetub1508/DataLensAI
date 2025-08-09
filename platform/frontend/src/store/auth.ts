@@ -10,6 +10,7 @@ interface AuthStore extends AuthState {
   register: (credentials: RegisterCredentials) => Promise<void>
   logout: () => void
   refreshUser: () => Promise<void>
+  refreshUserPromise: Promise<void> | null
   verifyEmail: (token: string) => Promise<void>
   requestPasswordReset: (email: string) => Promise<void>
   resetPassword: (token: string, newPassword: string) => Promise<void>
@@ -25,6 +26,8 @@ export const useAuthStore = create<AuthStore>()(
       refreshToken: null,
       isAuthenticated: false,
       isLoading: false,
+      error: null,
+      refreshUserPromise: null,
 
       login: async (credentials: LoginCredentials) => {
         try {
@@ -90,16 +93,32 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       refreshUser: async () => {
-        try {
-          const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
-          if (!token) return
-          
-          const user = await apiClient.getCurrentUser()
-          set({ user })
-        } catch (error) {
-          // If user fetch fails, logout
-          get().logout()
+        const state = get()
+        
+        // If a refresh is already in progress, wait for it
+        if (state.refreshUserPromise) {
+          return state.refreshUserPromise
         }
+        
+        const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
+        if (!token) return Promise.resolve()
+        
+        // Create the refresh promise
+        const refreshPromise = (async () => {
+          try {
+            const user = await apiClient.getCurrentUser()
+            set({ user, refreshUserPromise: null })
+          } catch (error) {
+            set({ refreshUserPromise: null })
+            // If user fetch fails, logout
+            get().logout()
+          }
+        })()
+        
+        // Store the promise to prevent concurrent calls
+        set({ refreshUserPromise: refreshPromise })
+        
+        return refreshPromise
       },
 
       verifyEmail: async (token: string) => {

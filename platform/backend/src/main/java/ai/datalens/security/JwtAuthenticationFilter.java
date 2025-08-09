@@ -1,5 +1,6 @@
 package ai.datalens.security;
 
+import ai.datalens.constants.SecurityConstants;
 import ai.datalens.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -54,8 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(SecurityConstants.BEARER_PREFIX)) {
+            return headerAuth.substring(SecurityConstants.BEARER_PREFIX.length());
         }
 
         return null;

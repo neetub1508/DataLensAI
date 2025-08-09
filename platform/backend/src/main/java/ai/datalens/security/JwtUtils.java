@@ -1,5 +1,6 @@
 package ai.datalens.security;
 
+import ai.datalens.constants.JwtTokenType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
@@ -113,19 +114,19 @@ public class JwtUtils {
 
     // New methods for AuthService
     public String generateAccessToken(UserPrincipal userPrincipal) {
-        return generateTokenFromEmail(userPrincipal.getEmail(), jwtExpirationMs, "ACCESS");
+        return generateTokenFromEmail(userPrincipal.getEmail(), jwtExpirationMs, JwtTokenType.ACCESS);
     }
 
     public String generateRefreshToken(UserPrincipal userPrincipal) {
-        return generateTokenFromEmail(userPrincipal.getEmail(), refreshExpirationMs, "REFRESH");
+        return generateTokenFromEmail(userPrincipal.getEmail(), refreshExpirationMs, JwtTokenType.REFRESH);
     }
 
     public String generateVerificationToken(String email) {
-        return generateTokenFromEmail(email, verificationExpirationMs, "VERIFICATION");
+        return generateTokenFromEmail(email, verificationExpirationMs, JwtTokenType.VERIFICATION);
     }
 
     public String generatePasswordResetToken(String email) {
-        return generateTokenFromEmail(email, passwordResetExpirationMs, "PASSWORD_RESET");
+        return generateTokenFromEmail(email, passwordResetExpirationMs, JwtTokenType.PASSWORD_RESET);
     }
 
     private String generateTokenFromEmail(String email, long expirationMs, String tokenType) {
@@ -141,15 +142,15 @@ public class JwtUtils {
     }
 
     public boolean validateRefreshToken(String token) {
-        return validateTokenOfType(token, "REFRESH");
+        return validateTokenOfType(token, JwtTokenType.REFRESH);
     }
 
     public boolean validateVerificationToken(String token) {
-        return validateTokenOfType(token, "VERIFICATION");
+        return validateTokenOfType(token, JwtTokenType.VERIFICATION);
     }
 
     public boolean validatePasswordResetToken(String token) {
-        return validateTokenOfType(token, "PASSWORD_RESET");
+        return validateTokenOfType(token, JwtTokenType.PASSWORD_RESET);
     }
 
     private boolean validateTokenOfType(String token, String expectedType) {
@@ -169,15 +170,15 @@ public class JwtUtils {
     }
 
     public String getEmailFromRefreshToken(String token) {
-        return getEmailFromTokenOfType(token, "REFRESH");
+        return getEmailFromTokenOfType(token, JwtTokenType.REFRESH);
     }
 
     public String getEmailFromVerificationToken(String token) {
-        return getEmailFromTokenOfType(token, "VERIFICATION");
+        return getEmailFromTokenOfType(token, JwtTokenType.VERIFICATION);
     }
 
     public String getEmailFromPasswordResetToken(String token) {
-        return getEmailFromTokenOfType(token, "PASSWORD_RESET");
+        return getEmailFromTokenOfType(token, JwtTokenType.PASSWORD_RESET);
     }
 
     private String getEmailFromTokenOfType(String token, String expectedType) {
@@ -200,10 +201,10 @@ public class JwtUtils {
     }
 
     public boolean validateAccessToken(String token) {
-        return validateTokenOfType(token, "ACCESS");
+        return validateTokenOfType(token, JwtTokenType.ACCESS);
     }
 
     public String getEmailFromAccessToken(String token) {
-        return getEmailFromTokenOfType(token, "ACCESS");
+        return getEmailFromTokenOfType(token, JwtTokenType.ACCESS);
     }
 }

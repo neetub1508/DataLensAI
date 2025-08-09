@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { toast } from 'react-hot-toast'
+import { API_CONFIG, API_ENDPOINTS, STORAGE_KEYS } from '../constants'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+const API_URL = API_CONFIG.BASE_URL
 
 class ApiClient {
   private client: AxiosInstance
@@ -22,13 +23,13 @@ class ApiClient {
     // Request interceptor to add auth token and project context
     this.client.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem('access_token')
+        const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
         
         // Add current project ID to headers if available
-        const currentProject = localStorage.getItem('project-store')
+        const currentProject = localStorage.getItem(STORAGE_KEYS.PROJECT_STORE)
         if (currentProject) {
           try {
             const projectStore = JSON.parse(currentProject)
@@ -56,16 +57,16 @@ class ApiClient {
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true
 
-          const refreshToken = localStorage.getItem('refresh_token')
+          const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN)
           if (refreshToken) {
             try {
-              const response = await this.client.post('/auth/refresh', {
+              const response = await this.client.post(API_ENDPOINTS.AUTH.REFRESH, {
                 refresh_token: refreshToken,
               })
               
               const { access_token, refresh_token: newRefreshToken } = response.data
-              localStorage.setItem('access_token', access_token)
-              localStorage.setItem('refresh_token', newRefreshToken)
+              localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, access_token)
+              localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken)
               
               // Retry original request
               originalRequest.headers.Authorization = `Bearer ${access_token}`
@@ -94,12 +95,12 @@ class ApiClient {
 
   // Auth methods
   async login(email: string, password: string) {
-    const response = await this.client.post('/auth/login', { email, password })
+    const response = await this.client.post(API_ENDPOINTS.AUTH.LOGIN, { email, password })
     return response.data
   }
 
   async register(email: string, password: string, locale = 'en') {
-    const response = await this.client.post('/auth/register', { 
+    const response = await this.client.post(API_ENDPOINTS.AUTH.REGISTER, { 
       email, 
       password, 
       locale 
@@ -108,21 +109,21 @@ class ApiClient {
   }
 
   async verifyEmail(token: string) {
-    const response = await this.client.post('/auth/verify-email', null, {
+    const response = await this.client.post(API_ENDPOINTS.AUTH.VERIFY_EMAIL, null, {
       params: { token }
     })
     return response.data
   }
 
   async requestPasswordReset(email: string) {
-    const response = await this.client.post('/auth/request-password-reset', null, {
+    const response = await this.client.post(API_ENDPOINTS.AUTH.REQUEST_PASSWORD_RESET, null, {
       params: { email }
     })
     return response.data
   }
 
   async resetPassword(token: string, newPassword: string) {
-    const response = await this.client.post('/auth/reset-password', null, {
+    const response = await this.client.post(API_ENDPOINTS.AUTH.RESET_PASSWORD, null, {
       params: { token, new_password: newPassword }
     })
     return response.data
@@ -130,133 +131,133 @@ class ApiClient {
 
   // User methods
   async getCurrentUser() {
-    const response = await this.client.get('/users/me')
+    const response = await this.client.get(API_ENDPOINTS.USERS.ME)
     return response.data
   }
 
   async updateCurrentUser(data: any) {
-    const response = await this.client.put('/users/me', data)
+    const response = await this.client.put(API_ENDPOINTS.USERS.ME, data)
     return response.data
   }
 
   async getAllUsers(skip = 0, limit = 100) {
-    const response = await this.client.get('/users/', {
+    const response = await this.client.get(API_ENDPOINTS.USERS.BASE, {
       params: { skip, limit }
     })
     return response.data
   }
 
   async getUserById(userId: string) {
-    const response = await this.client.get(`/users/${userId}`)
+    const response = await this.client.get(`${API_ENDPOINTS.USERS.BASE}${userId}`)
     return response.data
   }
 
   async updateUser(userId: string, data: any) {
-    const response = await this.client.put(`/users/${userId}`, data)
+    const response = await this.client.put(`${API_ENDPOINTS.USERS.BASE}${userId}`, data)
     return response.data
   }
 
   async deleteUser(userId: string) {
-    const response = await this.client.delete(`/users/${userId}`)
+    const response = await this.client.delete(`${API_ENDPOINTS.USERS.BASE}${userId}`)
     return response.data
   }
 
   // Role methods
   async getAllRoles(skip = 0, limit = 100) {
-    const response = await this.client.get('/roles/', {
+    const response = await this.client.get(API_ENDPOINTS.ROLES.BASE, {
       params: { skip, limit }
     })
     return response.data
   }
 
   async createRole(data: any) {
-    const response = await this.client.post('/roles/', data)
+    const response = await this.client.post(API_ENDPOINTS.ROLES.BASE, data)
     return response.data
   }
 
   async updateRole(roleId: string, data: any) {
-    const response = await this.client.put(`/roles/${roleId}`, data)
+    const response = await this.client.put(`${API_ENDPOINTS.ROLES.BASE}${roleId}`, data)
     return response.data
   }
 
   async deleteRole(roleId: string) {
-    const response = await this.client.delete(`/roles/${roleId}`)
+    const response = await this.client.delete(`${API_ENDPOINTS.ROLES.BASE}${roleId}`)
     return response.data
   }
 
   // Permission methods
   async getAllPermissions(skip = 0, limit = 100) {
-    const response = await this.client.get('/permissions/', {
+    const response = await this.client.get(API_ENDPOINTS.PERMISSIONS.BASE, {
       params: { skip, limit }
     })
     return response.data
   }
 
   async createPermission(data: any) {
-    const response = await this.client.post('/permissions/', data)
+    const response = await this.client.post(API_ENDPOINTS.PERMISSIONS.BASE, data)
     return response.data
   }
 
   // Project methods
   async getUserProjects() {
-    const response = await this.client.get('/projects')
+    const response = await this.client.get(API_ENDPOINTS.PROJECTS.BASE)
     return response.data
   }
 
   async createProject(data: { name: string; description?: string; settings?: string }) {
-    const response = await this.client.post('/projects', data)
+    const response = await this.client.post(API_ENDPOINTS.PROJECTS.BASE, data)
     return response.data
   }
 
   async getProject(projectId: string) {
-    const response = await this.client.get(`/projects/${projectId}`)
+    const response = await this.client.get(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`)
     return response.data
   }
 
   async updateProject(projectId: string, data: { name: string; description?: string; settings?: string }) {
-    const response = await this.client.put(`/projects/${projectId}`, data)
+    const response = await this.client.put(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`, data)
     return response.data
   }
 
   async deleteProject(projectId: string) {
-    const response = await this.client.delete(`/projects/${projectId}`)
+    const response = await this.client.delete(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`)
     return response.data
   }
 
   async archiveProject(projectId: string) {
-    const response = await this.client.patch(`/projects/${projectId}/archive`)
+    const response = await this.client.patch(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/archive`)
     return response.data
   }
 
   async restoreProject(projectId: string) {
-    const response = await this.client.patch(`/projects/${projectId}/restore`)
+    const response = await this.client.patch(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/restore`)
     return response.data
   }
 
   async addProjectMember(projectId: string, memberId: string) {
-    const response = await this.client.post(`/projects/${projectId}/members/${memberId}`)
+    const response = await this.client.post(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/members/${memberId}`)
     return response.data
   }
 
   async removeProjectMember(projectId: string, memberId: string) {
-    const response = await this.client.delete(`/projects/${projectId}/members/${memberId}`)
+    const response = await this.client.delete(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/members/${memberId}`)
     return response.data
   }
 
   async searchProjects(query: string) {
-    const response = await this.client.get('/projects/search', {
+    const response = await this.client.get(API_ENDPOINTS.PROJECTS.SEARCH, {
       params: { q: query }
     })
     return response.data
   }
 
   async getUserActiveProjectCount() {
-    const response = await this.client.get('/projects/count')
+    const response = await this.client.get(API_ENDPOINTS.PROJECTS.COUNT)
     return response.data
   }
 
   async checkProjectAccess(projectId: string) {
-    const response = await this.client.get(`/projects/${projectId}/access`)
+    const response = await this.client.get(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/access`)
     return response.data
   }
 }

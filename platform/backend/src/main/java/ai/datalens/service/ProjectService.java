@@ -1,5 +1,7 @@
 package ai.datalens.service;
 
+import ai.datalens.constants.ProjectStatus;
+
 import ai.datalens.dto.request.ProjectRequest;
 import ai.datalens.dto.response.ProjectResponse;
 import ai.datalens.entity.Project;
@@ -106,7 +108,7 @@ public class ProjectService {
         Project project = projectRepository.findByIdAndOwner(projectId, user)
             .orElseThrow(() -> new RuntimeException("Project not found or you don't have permission to archive"));
 
-        project.setStatus("ARCHIVED");
+        project.setStatus(ProjectStatus.ARCHIVED);
         projectRepository.save(project);
     }
 
@@ -117,7 +119,7 @@ public class ProjectService {
         Project project = projectRepository.findByIdAndOwner(projectId, user)
             .orElseThrow(() -> new RuntimeException("Project not found or you don't have permission to restore"));
 
-        project.setStatus("ACTIVE");
+        project.setStatus(ProjectStatus.ACTIVE);
         projectRepository.save(project);
     }
 

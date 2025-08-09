@@ -1,5 +1,6 @@
 package ai.datalens.service;
 
+import ai.datalens.constants.RoleNames;
 import ai.datalens.dto.request.BlogPostRequest;
 import ai.datalens.dto.response.BlogCategoryResponse;
 import ai.datalens.dto.response.BlogPostResponse;
@@ -236,7 +237,7 @@ public class BlogService {
     private boolean isAdmin(UUID userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.isPresent() && user.get().getRoles().stream()
-            .anyMatch(role -> "admin".equals(role.getName()));
+            .anyMatch(role -> RoleNames.ADMIN.equals(role.getName()));
     }
     
     private BlogPostResponse convertToResponseWithCategories(BlogPost post) {

@@ -1,5 +1,7 @@
 package ai.datalens.security;
 
+import ai.datalens.constants.SecurityConstants;
+import ai.datalens.constants.UserStatus;
 import ai.datalens.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,11 +42,11 @@ public class UserPrincipal implements UserDetails {
                 .flatMap(role -> {
                     // Add role authority
                     Set<GrantedAuthority> roleAuthorities = role.getPermissions().stream()
-                            .map(permission -> new SimpleGrantedAuthority("PERMISSION_" + permission.getName()))
+                            .map(permission -> new SimpleGrantedAuthority(SecurityConstants.PERMISSION_PREFIX + permission.getName()))
                             .collect(Collectors.toSet());
                     
                     // Add role authority
-                    roleAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()));
+                    roleAuthorities.add(new SimpleGrantedAuthority(SecurityConstants.ROLE_PREFIX + role.getName().toUpperCase()));
                     
                     return roleAuthorities.stream();
                 })
@@ -54,7 +56,7 @@ public class UserPrincipal implements UserDetails {
                 user.getId(),
                 user.getEmail(),
                 user.getPasswordHash(),
-                "ACTIVE".equals(user.getStatus()),
+                UserStatus.ACTIVE.equals(user.getStatus()),
                 true, // accountNonExpired
                 true, // accountNonLocked
                 true, // credentialsNonExpired

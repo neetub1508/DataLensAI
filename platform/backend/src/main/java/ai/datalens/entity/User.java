@@ -1,5 +1,8 @@
 package ai.datalens.entity;
 
+import ai.datalens.constants.AuthProvider;
+import ai.datalens.constants.UserStatus;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -39,7 +42,7 @@ public class User extends BaseEntity {
     @NotBlank
     @Size(max = 20)
     @Column(name = "status", nullable = false)
-    private String status = "ACTIVE";
+    private String status = UserStatus.ACTIVE;
 
     @Column(name = "verification_token")
     private String verificationToken;
@@ -52,7 +55,7 @@ public class User extends BaseEntity {
 
     @Size(max = 50)
     @Column(name = "provider")
-    private String provider = "LOCAL";
+    private String provider = AuthProvider.LOCAL;
 
     @Size(max = 255)
     @Column(name = "provider_id")

@@ -1,5 +1,7 @@
 package ai.datalens.service;
 
+import ai.datalens.constants.RoleNames;
+import ai.datalens.constants.UserStatus;
 import ai.datalens.dto.request.LoginRequest;
 import ai.datalens.dto.request.RegisterRequest;
 import ai.datalens.dto.response.AuthResponse;
@@ -57,13 +59,13 @@ public class AuthService {
         user.setEmail(registerRequest.getEmail());
         user.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
         user.setLocale(registerRequest.getLocale() != null ? registerRequest.getLocale() : "en");
-        user.setStatus("PENDING_VERIFICATION");
+        user.setStatus(UserStatus.PENDING_VERIFICATION);
         user.setIsVerified(false);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
         // Assign default user role
-        Role userRole = roleRepository.findByName("USER")
+        Role userRole = roleRepository.findByName(RoleNames.USER)
                 .orElseThrow(() -> new RuntimeException("Default user role not found"));
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
@@ -145,7 +147,7 @@ public class AuthService {
         }
 
         user.setIsVerified(true);
-        user.setStatus("ACTIVE");
+        user.setStatus(UserStatus.ACTIVE);
         user.setVerificationToken(null);
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);

@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 import { AuthState, User, LoginCredentials, RegisterCredentials } from '@/types/auth'
 import { apiClient } from '@/lib/api'
 import { toast } from 'react-hot-toast'
+import { STORAGE_KEYS } from '@/constants'
 
 interface AuthStore extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>
@@ -90,7 +91,7 @@ export const useAuthStore = create<AuthStore>()(
 
       refreshUser: async () => {
         try {
-          const token = localStorage.getItem('access_token')
+          const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
           if (!token) return
           
           const user = await apiClient.getCurrentUser()
@@ -171,7 +172,7 @@ export const useAuthStore = create<AuthStore>()(
 
 // Initialize auth state on app load
 if (typeof window !== 'undefined') {
-  const token = localStorage.getItem('access_token')
+  const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
   if (token) {
     useAuthStore.getState().refreshUser()
   }

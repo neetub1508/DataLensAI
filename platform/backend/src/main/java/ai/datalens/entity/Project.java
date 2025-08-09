@@ -1,5 +1,7 @@
 package ai.datalens.entity;
 
+import ai.datalens.constants.ProjectStatus;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,7 +30,7 @@ public class Project extends BaseEntity {
     @NotBlank
     @Size(max = 20)
     @Column(name = "status", nullable = false)
-    private String status = "ACTIVE";
+    private String status = ProjectStatus.ACTIVE;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false, 

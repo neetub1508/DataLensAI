@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { HTTP_METHODS } from '@/constants'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
 
@@ -62,7 +63,7 @@ export default function AdminBlogManagementPage() {
   const approvePost = async (postId: string) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/admin/posts/${postId}/approve`, {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -89,7 +90,7 @@ export default function AdminBlogManagementPage() {
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/admin/posts/${postId}/reject`, {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

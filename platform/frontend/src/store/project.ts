@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { apiClient } from '@/lib/api'
 import { Project, CreateProjectRequest, UpdateProjectRequest } from '@/types/project'
+import { PROJECT_STATUS } from '@/constants/project'
 
 interface ProjectState {
   projects: Project[]
@@ -125,7 +126,7 @@ export const useProjectStore = create<ProjectState>()(
           await apiClient.archiveProject(projectId)
           set(state => ({
             projects: state.projects.map(p => 
-              p.id === projectId ? { ...p, status: 'ARCHIVED' as const } : p
+              p.id === projectId ? { ...p, status: PROJECT_STATUS.ARCHIVED } : p
             ),
             isLoading: false
           }))
@@ -144,7 +145,7 @@ export const useProjectStore = create<ProjectState>()(
           await apiClient.restoreProject(projectId)
           set(state => ({
             projects: state.projects.map(p => 
-              p.id === projectId ? { ...p, status: 'ACTIVE' as const } : p
+              p.id === projectId ? { ...p, status: PROJECT_STATUS.ACTIVE } : p
             ),
             isLoading: false
           }))

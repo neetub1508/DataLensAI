@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { BLOG_POST_STATUS, HTTP_METHODS } from '@/constants'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
 
@@ -54,7 +55,7 @@ export default function BlogManagementPage() {
   const submitForApproval = async (postId: string) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/${postId}/submit`, {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -81,7 +82,7 @@ export default function BlogManagementPage() {
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts/${postId}`, {
-        method: 'DELETE',
+        method: HTTP_METHODS.DELETE,
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -218,7 +219,7 @@ export default function BlogManagementPage() {
                     
                     <div className="flex items-center space-x-2 ml-4">
                       {/* View Post (if published) */}
-                      {post.status === 'PUBLISHED' && (
+                      {post.status === BLOG_POST_STATUS.PUBLISHED && (
                         <Link
                           href={`/blog/${post.slug}`}
                           target="_blank"
@@ -244,7 +245,7 @@ export default function BlogManagementPage() {
                       </Link>
                       
                       {/* Submit for Approval (if draft) */}
-                      {post.status === 'DRAFT' && (
+                      {post.status === BLOG_POST_STATUS.DRAFT && (
                         <button
                           onClick={() => submitForApproval(post.id)}
                           className="p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400"

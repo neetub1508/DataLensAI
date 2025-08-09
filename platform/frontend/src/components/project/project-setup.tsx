@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { PROJECT_STATUS } from '@/constants/project'
 import { useRouter } from 'next/navigation'
 import { useProjectStore } from '@/store/project'
 import { Project } from '@/types/project'
@@ -245,7 +246,7 @@ export default function ProjectSetup({ onProjectSelected }: ProjectSetupProps) {
                         </span>
                       )}
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        project.status === 'ACTIVE' 
+                        project.status === PROJECT_STATUS.ACTIVE 
                           ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
                           : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
                       }`}>

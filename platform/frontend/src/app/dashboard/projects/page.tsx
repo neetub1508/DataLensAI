@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { PROJECT_STATUS } from '@/constants/project'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth'
 import { useProjectStore } from '@/store/project'
@@ -133,10 +134,10 @@ export default function ProjectsPage() {
                 {/* Active Projects */}
                 <div>
                   <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                    Active Projects ({projects.filter(p => p.status === 'ACTIVE').length})
+                    Active Projects ({projects.filter(p => p.status === PROJECT_STATUS.ACTIVE).length})
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {projects.filter(p => p.status === 'ACTIVE').map((project) => (
+                    {projects.filter(p => p.status === PROJECT_STATUS.ACTIVE).map((project) => (
                       <div
                         key={project.id}
                         className={`bg-white dark:bg-gray-800 shadow rounded-lg p-6 hover:shadow-lg transition-shadow ${
@@ -246,13 +247,13 @@ export default function ProjectsPage() {
                 </div>
 
                 {/* Archived Projects */}
-                {projects.filter(p => p.status === 'ARCHIVED').length > 0 && (
+                {projects.filter(p => p.status === PROJECT_STATUS.ARCHIVED).length > 0 && (
                   <div>
                     <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                      Archived Projects ({projects.filter(p => p.status === 'ARCHIVED').length})
+                      Archived Projects ({projects.filter(p => p.status === PROJECT_STATUS.ARCHIVED).length})
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {projects.filter(p => p.status === 'ARCHIVED').map((project) => (
+                      {projects.filter(p => p.status === PROJECT_STATUS.ARCHIVED).map((project) => (
                         <div
                           key={project.id}
                           className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 opacity-75"

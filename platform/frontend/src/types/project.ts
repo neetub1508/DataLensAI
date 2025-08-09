@@ -1,8 +1,10 @@
+import { PROJECT_STATUS } from '@/constants/project'
+
 export interface Project {
   id: string
   name: string
   description?: string
-  status: 'ACTIVE' | 'ARCHIVED' | 'SUSPENDED'
+  status: keyof typeof PROJECT_STATUS
   ownerId: string
   ownerEmail: string
   memberCount: number

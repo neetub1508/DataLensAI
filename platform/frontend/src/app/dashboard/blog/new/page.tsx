@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { HTTP_METHODS } from '@/constants'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
@@ -79,7 +80,7 @@ export default function NewBlogPostPage() {
       }
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/posts`, {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

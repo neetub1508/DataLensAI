@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { toast } from 'react-hot-toast'
-import { API_CONFIG, API_ENDPOINTS, STORAGE_KEYS } from '../constants'
+import { API_CONFIG, API_ENDPOINTS, STORAGE_KEYS, DEFAULT_LOCALE, LocaleType } from '../constants'
 
 const API_URL = API_CONFIG.BASE_URL
 
@@ -99,7 +99,7 @@ class ApiClient {
     return response.data
   }
 
-  async register(email: string, password: string, locale = 'en') {
+  async register(email: string, password: string, locale: string = DEFAULT_LOCALE) {
     const response = await this.client.post(API_ENDPOINTS.AUTH.REGISTER, { 
       email, 
       password, 

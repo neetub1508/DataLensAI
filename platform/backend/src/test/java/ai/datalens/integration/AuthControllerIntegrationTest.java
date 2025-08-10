@@ -194,4 +194,85 @@ class AuthControllerIntegrationTest {
                     }
                 });
     }
+
+    @Test
+    void shouldLoginAdminUserSuccessfully() throws Exception {
+        // Create admin role
+        Role adminRole = new Role();
+        adminRole.setId(UUID.randomUUID());
+        adminRole.setName(RoleNames.ADMIN);
+        adminRole.setDescription("Administrator with full access");
+        adminRole.setCreatedAt(LocalDateTime.now());
+        adminRole.setUpdatedAt(LocalDateTime.now());
+        roleRepository.save(adminRole);
+
+        // Create admin user
+        User adminUser = new User();
+        adminUser.setId(UUID.randomUUID());
+        adminUser.setEmail("admin@datalens.ai");
+        adminUser.setPasswordHash(passwordEncoder.encode("admin123"));
+        adminUser.setStatus(UserStatus.ACTIVE);
+        adminUser.setIsVerified(true);
+        adminUser.setLocale("en");
+        adminUser.setCreatedAt(LocalDateTime.now());
+        adminUser.setUpdatedAt(LocalDateTime.now());
+        adminUser.setRoles(Collections.singleton(adminRole));
+        userRepository.save(adminUser);
+
+        LoginRequest request = new LoginRequest();
+        request.setEmail("admin@datalens.ai");
+        request.setPassword("admin123");
+
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessToken").exists())
+                .andExpect(jsonPath("$.refreshToken").exists())
+                .andExpect(jsonPath("$.user.email").value("admin@datalens.ai"))
+                .andExpect(jsonPath("$.user.roles").isArray())
+                .andExpect(jsonPath("$.user.roles[0].name").value(RoleNames.ADMIN))
+                .andExpect(jsonPath("$.expiresIn").exists());
+    }
+
+    @Test
+    void shouldVerifyAdminUserHasCorrectPermissions() throws Exception {
+        // Create admin role
+        Role adminRole = new Role();
+        adminRole.setId(UUID.randomUUID());
+        adminRole.setName(RoleNames.ADMIN);
+        adminRole.setDescription("Administrator with full access");
+        adminRole.setCreatedAt(LocalDateTime.now());
+        adminRole.setUpdatedAt(LocalDateTime.now());
+        roleRepository.save(adminRole);
+
+        // Create admin user
+        User adminUser = new User();
+        adminUser.setId(UUID.randomUUID());
+        adminUser.setEmail("admin@datalens.ai");
+        adminUser.setPasswordHash(passwordEncoder.encode("admin123"));
+        adminUser.setStatus(UserStatus.ACTIVE);
+        adminUser.setIsVerified(true);
+        adminUser.setLocale("en");
+        adminUser.setCreatedAt(LocalDateTime.now());
+        adminUser.setUpdatedAt(LocalDateTime.now());
+        adminUser.setRoles(Collections.singleton(adminRole));
+        userRepository.save(adminUser);
+
+        LoginRequest request = new LoginRequest();
+        request.setEmail("admin@datalens.ai");
+        request.setPassword("admin123");
+
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.roles").exists())
+                .andExpect(jsonPath("$.user.roles").isNotEmpty())
+                .andExpect(result -> {
+                    String responseBody = result.getResponse().getContentAsString();
+                    // Verify admin role is present
+                    assert responseBody.contains(RoleNames.ADMIN);
+                });
+    }
 }

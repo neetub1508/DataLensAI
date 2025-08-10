@@ -61,12 +61,14 @@ services:
     networks:
       - test-network
     command: >
-      sh -c "
+      bash -c "
         echo 'Waiting for dependencies...' &&
         sleep 10 &&
         echo 'Running backend tests...' &&
+        mkdir -p /home/appuser/.m2/repository &&
+        chown -R appuser:appuser /home/appuser/.m2 &&
         rm -rf target/* 2>/dev/null || true &&
-        mvn test -Dtest='BasicContainerizedTest' -Djacoco.skip=true -DfailIfNoTests=false --batch-mode --quiet
+        sudo -u appuser env JAVA_HOME=/opt/java/openjdk MAVEN_HOME=/opt/maven PATH=/opt/java/openjdk/bin:/opt/maven/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin mvn test -Dtest='BasicContainerizedTest' -Djacoco.skip=true -DfailIfNoTests=false --batch-mode --quiet
       "
 
   # Frontend Test Container
@@ -108,8 +110,7 @@ services:
     volumes:
       - ./backend:/app:ro
       - integration_test_reports:/app/target
-      - maven_cache:/root/.m2
-    user: "0:0"
+      - maven_cache:/home/appuser/.m2
     depends_on:
       postgres-test:
         condition: service_healthy
@@ -118,12 +119,14 @@ services:
     networks:
       - test-network
     command: >
-      sh -c "
+      bash -c "
         echo 'Waiting for dependencies...' &&
         sleep 15 &&
         echo 'Running integration tests...' &&
+        mkdir -p /home/appuser/.m2/repository &&
+        chown -R appuser:appuser /home/appuser/.m2 &&
         rm -rf target/* 2>/dev/null || true &&
-        mvn test -Dtest='*IntegrationTest' -DfailIfNoTests=false -Djacoco.skip=true --batch-mode --quiet
+        sudo -u appuser env JAVA_HOME=/opt/java/openjdk MAVEN_HOME=/opt/maven PATH=/opt/java/openjdk/bin:/opt/maven/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin mvn test -Dtest='*IntegrationTest' -DfailIfNoTests=false -Djacoco.skip=true --batch-mode --quiet
       "
 
   # E2E Test Container

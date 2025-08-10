@@ -63,8 +63,8 @@ class ApiClient {
             try {
               // Use existing promise if refresh is already in progress
               if (!this.refreshTokenPromise) {
-                this.refreshTokenPromise = this.client.post(API_ENDPOINTS.AUTH.REFRESH, {
-                  refresh_token: refreshToken,
+                this.refreshTokenPromise = this.client.post(API_ENDPOINTS.AUTH.REFRESH, null, {
+                  params: { refresh_token: refreshToken }
                 })
               }
               

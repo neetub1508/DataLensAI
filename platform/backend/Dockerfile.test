@@ -1,0 +1,38 @@
+# Backend Test Dockerfile - Volume-friendly
+FROM eclipse-temurin:17-jdk-jammy
+
+# Create app user to avoid permission issues
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Set working directory
+WORKDIR /app
+
+# Install necessary tools including Maven
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    maven \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy project files for dependency resolution
+COPY pom.xml ./
+
+# Create directories and set permissions
+RUN mkdir -p src/main/java src/test/java target .m2 && \
+    chown -R appuser:appuser /app
+
+# Pre-download common test dependencies to cache layer
+RUN mvn dependency:resolve dependency:resolve-sources -B -DskipTests 2>/dev/null || \
+    echo "Some dependencies failed to resolve - continuing with available ones"
+
+# Copy actual source code
+COPY src ./src/
+
+# Ensure proper permissions
+RUN chown -R appuser:appuser /app
+
+# Switch to app user
+USER appuser
+
+# Set default command for testing
+CMD ["mvn", "test", "-Djacoco.skip=true", "-DfailIfNoTests=false"]

@@ -44,7 +44,7 @@ EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8000/api/v1/actuator/health || exit 1
+    CMD curl -f http://localhost:8000/actuator/health || exit 1
 
 # Environment variables
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom"

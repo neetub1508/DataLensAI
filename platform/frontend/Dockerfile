@@ -33,6 +33,24 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+# Development image for E2E testing
+FROM base AS development
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+ENV NODE_ENV development
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+USER nextjs
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
+
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app

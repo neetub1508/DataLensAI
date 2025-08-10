@@ -35,6 +35,8 @@ show_usage() {
     echo "  --clean-all     Remove all containers, images, and volumes"
     echo "  --clean-build   Remove only build artifacts and rebuild"
     echo "  --no-build      Skip building images (use existing)"
+    echo "  --test          Run comprehensive tests before starting services"
+    echo "  --test-only     Run tests only (don't start services)"
     echo "  --help          Show this help message"
 }
 
@@ -136,6 +138,30 @@ start_services() {
     log_info "All services are running!"
 }
 
+# Run comprehensive tests
+run_tests() {
+    log_step "Running comprehensive test suite in containers..."
+    
+    if [ ! -f "./test-runner-containerized.sh" ]; then
+        log_error "test-runner-containerized.sh not found. Please ensure test framework is set up."
+        return 1
+    fi
+    
+    # Make test runner executable
+    chmod +x ./test-runner-containerized.sh
+    
+    # Run containerized tests (default: unit and integration)
+    ./test-runner-containerized.sh --unit --integration
+    
+    if [ $? -eq 0 ]; then
+        log_info "All tests passed successfully!"
+        return 0
+    else
+        log_error "Some tests failed. Check test reports for details."
+        return 1
+    fi
+}
+
 # Show service status
 show_status() {
     log_step "Service Status:"
@@ -149,6 +175,12 @@ show_status() {
     echo "Redis: localhost:6379"
     
     echo ""
+    log_step "Containerized Test Framework:"
+    echo "Test Runner: ./test-runner-containerized.sh [--help for options]"
+    echo "Latest Reports: ./test-reports/"
+    echo "Legacy Runner: ./test-runner.sh [local testing]"
+    
+    echo ""
     log_step "Default Login Credentials:"
     echo "Admin: admin@datalens.ai / admin123"
     echo "User: user@datalens.ai / admin123"
@@ -159,6 +191,8 @@ main() {
     local clean_all_flag=false
     local clean_build_flag=false
     local no_build_flag=false
+    local run_tests_flag=false
+    local test_only_flag=false
     
     # Parse arguments
     while [[ $# -gt 0 ]]; do
@@ -175,6 +209,14 @@ main() {
                 no_build_flag=true
                 shift
                 ;;
+            --test)
+                run_tests_flag=true
+                shift
+                ;;
+            --test-only)
+                test_only_flag=true
+                shift
+                ;;
             --help)
                 show_usage
                 exit 0
@@ -189,7 +231,27 @@ main() {
     
     log_info "Starting Data Lens AI platform..."
     
+    # Handle test-only mode
+    if [ "$test_only_flag" = true ]; then
+        log_info "Running tests only (no services will be started)..."
+        run_tests
+        exit $?
+    fi
+    
     check_prerequisites
+    
+    # Run tests if requested
+    if [ "$run_tests_flag" = true ]; then
+        log_info "Running tests before starting services..."
+        if ! run_tests; then
+            log_error "Tests failed. Use --test-only to see detailed results or continue anyway."
+            read -p "Continue starting services anyway? (y/N): " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                exit 1
+            fi
+        fi
+    fi
     
     if [ "$clean_all_flag" = true ]; then
         clean_all

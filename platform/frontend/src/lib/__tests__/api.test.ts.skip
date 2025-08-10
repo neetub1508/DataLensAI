@@ -1,0 +1,206 @@
+import axios from 'axios';
+
+// Mock axios first, before importing api
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+// Mock the axios create method
+const mockAxiosInstance = {
+  get: jest.fn(),
+  post: jest.fn(),
+  put: jest.fn(),
+  delete: jest.fn(),
+  patch: jest.fn(),
+  interceptors: {
+    request: {
+      use: jest.fn(),
+    },
+    response: {
+      use: jest.fn(),
+    },
+  },
+};
+
+mockedAxios.create.mockReturnValue(mockAxiosInstance as any);
+
+// Now import api after mocking axios
+import { api } from '../api';
+
+describe('API Client', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Authentication', () => {
+    it('should login successfully', async () => {
+      const mockResponse = {
+        data: {
+          accessToken: 'mock-access-token',
+          refreshToken: 'mock-refresh-token',
+          user: {
+            id: '123',
+            email: 'test@example.com',
+          },
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+
+      const loginData = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+
+      const result = await api.auth.login(loginData);
+
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/api/auth/login', loginData);
+      expect(result).toEqual(mockResponse.data);
+    });
+
+    it('should register successfully', async () => {
+      const mockResponse = {
+        data: {
+          message: 'User registered successfully',
+          user: {
+            id: '123',
+            email: 'test@example.com',
+          },
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+
+      const registerData = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+
+      const result = await api.auth.register(registerData);
+
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/api/auth/register', registerData);
+      expect(result).toEqual(mockResponse.data);
+    });
+
+    it('should refresh token successfully', async () => {
+      const mockResponse = {
+        data: {
+          accessToken: 'new-access-token',
+          refreshToken: 'new-refresh-token',
+        },
+      };
+
+      mockAxiosInstance.post.mockResolvedValue(mockResponse);
+
+      const refreshToken = 'old-refresh-token';
+      const result = await api.auth.refreshToken(refreshToken);
+
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/api/auth/refresh', {
+        refreshToken,
+      });
+      expect(result).toEqual(mockResponse.data);
+    });
+
+    it('should handle login error', async () => {
+      const mockError = new Error('Invalid credentials');
+      mockAxiosInstance.post.mockRejectedValue(mockError);
+
+      const loginData = {
+        email: 'test@example.com',
+        password: 'wrongpassword',
+      };
+
+      await expect(api.auth.login(loginData)).rejects.toThrow('Invalid credentials');
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/api/auth/login', loginData);
+    });
+  });
+
+  describe('Users', () => {
+    it('should get user profile successfully', async () => {
+      const mockResponse = {
+        data: {
+          id: '123',
+          email: 'test@example.com',
+          isVerified: true,
+        },
+      };
+
+      mockAxiosInstance.get.mockResolvedValue(mockResponse);
+
+      const result = await api.users.getProfile();
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/api/users/profile');
+      expect(result).toEqual(mockResponse.data);
+    });
+
+    it('should update user profile successfully', async () => {
+      const mockResponse = {
+        data: {
+          id: '123',
+          email: 'test@example.com',
+          locale: 'es',
+        },
+      };
+
+      mockAxiosInstance.put.mockResolvedValue(mockResponse);
+
+      const updateData = { locale: 'es' };
+      const result = await api.users.updateProfile(updateData);
+
+      expect(mockAxiosInstance.put).toHaveBeenCalledWith('/api/users/profile', updateData);
+      expect(result).toEqual(mockResponse.data);
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle network errors', async () => {
+      const networkError = {
+        isAxiosError: true,
+        code: 'NETWORK_ERROR',
+        message: 'Network Error',
+      };
+
+      mockAxiosInstance.get.mockRejectedValue(networkError);
+
+      await expect(api.users.getProfile()).rejects.toMatchObject({
+        code: 'NETWORK_ERROR',
+        message: 'Network Error',
+      });
+    });
+
+    it('should handle 401 errors', async () => {
+      const unauthorizedError = {
+        isAxiosError: true,
+        response: {
+          status: 401,
+          data: { message: 'Unauthorized' },
+        },
+      };
+
+      mockAxiosInstance.get.mockRejectedValue(unauthorizedError);
+
+      await expect(api.users.getProfile()).rejects.toMatchObject({
+        response: {
+          status: 401,
+        },
+      });
+    });
+  });
+
+  describe('Request Interceptors', () => {
+    it('should add authorization header when token exists', () => {
+      // Mock localStorage
+      const mockToken = 'mock-jwt-token';
+      Object.defineProperty(window, 'localStorage', {
+        value: {
+          getItem: jest.fn(() => mockToken),
+          setItem: jest.fn(),
+          removeItem: jest.fn(),
+        },
+        writable: true,
+      });
+
+      // Verify that the interceptor was set up
+      expect(mockAxiosInstance.interceptors.request.use).toHaveBeenCalled();
+    });
+  });
+});

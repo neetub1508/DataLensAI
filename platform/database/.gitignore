@@ -1,0 +1,17 @@
+# Database migration logs
+migration.log
+migrate.log
+flyway.log
+
+# Database dumps
+*.dump
+*.sql.bak
+*.backup
+
+# PostgreSQL files
+*.pgdata
+postgresql.conf.bak
+
+# Temporary migration files
+temp_*.sql
+*_temp.sql

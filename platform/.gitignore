@@ -1,0 +1,18 @@
+# Platform specific files
+*.log
+*.pid
+*.lock
+
+# Test reports
+test-reports/
+*-results/
+e2e-results/
+
+# Script outputs
+dev-start.log
+start.log
+stop.log
+
+# Temporary files
+tmp/
+temp/

@@ -54,3 +54,18 @@ target/
 
 # Docker
 .dockerignore
+
+# Test Reports and Coverage
+test-reports/
+coverage/
+lcov-report/
+*.lcov
+clover.xml
+coverage-final.json
+surefire-reports/
+test-results/
+playwright-report/
+
+# Runtime logs and server files
+server.log
+*.pid

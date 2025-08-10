@@ -125,3 +125,16 @@ temp/
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright
+playwright-report/
+test-results/
+
+# Jest coverage (additional patterns)
+coverage/
+lcov-report/
+clover.xml
+coverage-final.json
+
+# TypeScript build info
+tsconfig.tsbuildinfo

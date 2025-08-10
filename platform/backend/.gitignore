@@ -89,3 +89,12 @@ application-*.yml
 application-*.properties
 !application.yml
 !application.properties
+
+# Runtime files
+server.log
+*.pid
+*.lock
+
+# OAuth2 backup files
+*Config.java.backup
+OAuth2Config.java.backup

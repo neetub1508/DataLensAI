@@ -1,0 +1,20 @@
+# Test outputs
+test-results/
+test-reports/
+*-results/
+*.xml
+*.json
+
+# API Contract testing
+api-contract/node_modules/
+api-contract/coverage/
+api-contract/*.log
+
+# Performance testing
+performance/results/
+performance/*.log
+performance/reports/
+
+# Load testing outputs
+load-test-results/
+artillery-output/

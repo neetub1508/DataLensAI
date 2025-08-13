@@ -50,19 +50,6 @@ spring:
           max-idle: 8
           min-idle: 0
   
-  # Mail Configuration
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${SMTP_USERNAME:}
-    password: ${SMTP_PASSWORD:}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-  
   # Security Configuration
   security:
     jwt:
@@ -70,18 +57,15 @@ spring:
       expiration: 86400000  # 24 hours in milliseconds
       refresh-expiration: 604800000  # 7 days in milliseconds
   
-  # Actuator Configuration
+  # Actuator Configuration  
   management:
     endpoints:
       web:
         exposure:
-          include: health,info,metrics,prometheus
+          include: health,info,metrics
     endpoint:
       health:
-        show-details: when-authorized
-    health:
-      mail:
-        enabled: false
+        show-details: always
   
   # Profile Configuration
   profiles:

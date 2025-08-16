@@ -3,16 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth'
-import { useProjectStore } from '@/store/project'
 import DashboardSidebar from '@/components/layouts/dashboard-sidebar'
-import ProjectSetup from '@/components/project/project-setup'
 
 export default function DashboardPage() {
   const router = useRouter()
   const { user, isAuthenticated, logout } = useAuthStore()
-  const { projects, currentProject, fetchProjects } = useProjectStore()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [showProjectSetup, setShowProjectSetup] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -21,15 +17,6 @@ export default function DashboardPage() {
     }
   }, [isAuthenticated, router])
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchProjects().then(() => {
-        // Show project setup if no projects exist or no current project is selected
-        const needsProjectSetup = projects.length === 0 || !currentProject
-        setShowProjectSetup(needsProjectSetup)
-      })
-    }
-  }, [isAuthenticated, fetchProjects])
 
   if (!isAuthenticated || !user) {
     return (
@@ -39,15 +26,6 @@ export default function DashboardPage() {
     )
   }
 
-  if (showProjectSetup) {
-    return (
-      <ProjectSetup
-        onProjectSelected={(project) => {
-          setShowProjectSetup(false)
-        }}
-      />
-    )
-  }
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -100,41 +78,6 @@ export default function DashboardPage() {
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto">
           <div className="p-6">
-            {/* Current Project Info */}
-            {currentProject && (
-              <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg mb-6">
-                <div className="px-4 py-5 sm:p-6">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    {currentProject.name}
-                  </h2>
-                  {currentProject.description && (
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      {currentProject.description}
-                    </p>
-                  )}
-                  
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center">
-                      <svg className="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                      </svg>
-                      {currentProject.memberCount + 1} members
-                    </div>
-                    <div className="flex items-center">
-                      <svg className="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Created {new Date(currentProject.createdAt).toLocaleDateString()}
-                    </div>
-                    {currentProject.lastAccessedAt && (
-                      <div className="flex items-center">
-                        Last accessed {new Date(currentProject.lastAccessedAt).toLocaleDateString()}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* Feature Cards */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -235,32 +178,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <div 
-                className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => setShowProjectSetup(true)}
-              >
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-gray-500 rounded-md flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V9a2 2 0 00-2-2H5z" />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                          Projects
-                        </dt>
-                        <dd className="text-lg font-medium text-gray-900 dark:text-white">
-                          Manage
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {user.roles?.includes('admin') && (
                 <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow cursor-pointer">

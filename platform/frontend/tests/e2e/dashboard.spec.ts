@@ -55,7 +55,7 @@ test.describe('Dashboard Flow', () => {
   test('should navigate to different dashboard sections', async () => {
     await page.goto('/dashboard');
     
-    const sections = ['/dashboard/projects', '/dashboard/blog', '/dashboard/admin'];
+    const sections = ['/dashboard/blog', '/dashboard/admin'];
     
     for (const section of sections) {
       await page.goto(section);
@@ -88,7 +88,6 @@ test.describe('Dashboard Flow', () => {
   test('should show proper page titles', async () => {
     const pages = [
       { url: '/dashboard', title: /dashboard/i },
-      { url: '/dashboard/projects', title: /project/i },
       { url: '/dashboard/blog', title: /blog/i }
     ];
     
@@ -140,17 +139,4 @@ test.describe('Dashboard Flow', () => {
     }
   });
 
-  test('should load projects section', async () => {
-    await page.goto('/dashboard/projects');
-    
-    // Should either load projects page or redirect
-    const currentUrl = page.url();
-    expect(currentUrl.length).toBeGreaterThan(0);
-    
-    if (currentUrl.includes('/projects')) {
-      // Look for project-related content
-      const projectElements = await page.locator('h1, h2, .project, [data-testid*="project"]').count();
-      expect(projectElements).toBeGreaterThanOrEqual(0);
-    }
-  });
 });

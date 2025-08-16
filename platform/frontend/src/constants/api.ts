@@ -25,9 +25,4 @@ export const API_ENDPOINTS = {
   PERMISSIONS: {
     BASE: '/permissions/',
   },
-  PROJECTS: {
-    BASE: '/projects',
-    SEARCH: '/projects/search',
-    COUNT: '/projects/count',
-  },
 } as const

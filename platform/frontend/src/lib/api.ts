@@ -21,7 +21,7 @@ class ApiClient {
   }
 
   private setupInterceptors() {
-    // Request interceptor to add auth token and project context
+    // Request interceptor to add auth token
     this.client.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
@@ -29,18 +29,6 @@ class ApiClient {
           config.headers.Authorization = `Bearer ${token}`
         }
         
-        // Add current project ID to headers if available
-        const currentProject = localStorage.getItem(STORAGE_KEYS.PROJECT_STORE)
-        if (currentProject) {
-          try {
-            const projectStore = JSON.parse(currentProject)
-            if (projectStore.state?.currentProject?.id) {
-              config.headers['X-Project-ID'] = projectStore.state.currentProject.id
-            }
-          } catch (error) {
-            console.warn('Failed to parse project store:', error)
-          }
-        }
         
         return config
       },
@@ -210,68 +198,6 @@ class ApiClient {
     return response.data
   }
 
-  // Project methods
-  async getUserProjects() {
-    const response = await this.client.get(API_ENDPOINTS.PROJECTS.BASE)
-    return response.data
-  }
-
-  async createProject(data: { name: string; description?: string; settings?: string }) {
-    const response = await this.client.post(API_ENDPOINTS.PROJECTS.BASE, data)
-    return response.data
-  }
-
-  async getProject(projectId: string) {
-    const response = await this.client.get(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`)
-    return response.data
-  }
-
-  async updateProject(projectId: string, data: { name: string; description?: string; settings?: string }) {
-    const response = await this.client.put(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`, data)
-    return response.data
-  }
-
-  async deleteProject(projectId: string) {
-    const response = await this.client.delete(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`)
-    return response.data
-  }
-
-  async archiveProject(projectId: string) {
-    const response = await this.client.patch(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/archive`)
-    return response.data
-  }
-
-  async restoreProject(projectId: string) {
-    const response = await this.client.patch(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/restore`)
-    return response.data
-  }
-
-  async addProjectMember(projectId: string, memberId: string) {
-    const response = await this.client.post(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/members/${memberId}`)
-    return response.data
-  }
-
-  async removeProjectMember(projectId: string, memberId: string) {
-    const response = await this.client.delete(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/members/${memberId}`)
-    return response.data
-  }
-
-  async searchProjects(query: string) {
-    const response = await this.client.get(API_ENDPOINTS.PROJECTS.SEARCH, {
-      params: { q: query }
-    })
-    return response.data
-  }
-
-  async getUserActiveProjectCount() {
-    const response = await this.client.get(API_ENDPOINTS.PROJECTS.COUNT)
-    return response.data
-  }
-
-  async checkProjectAccess(projectId: string) {
-    const response = await this.client.get(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}/access`)
-    return response.data
-  }
 }
 
 export const apiClient = new ApiClient()

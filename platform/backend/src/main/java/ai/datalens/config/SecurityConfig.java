@@ -2,7 +2,6 @@ package ai.datalens.config;
 
 import ai.datalens.security.JwtAuthenticationEntryPoint;
 import ai.datalens.security.JwtAuthenticationFilter;
-import ai.datalens.security.ProjectAccessFilter;
 import ai.datalens.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +34,6 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    @Autowired
-    private ProjectAccessFilter projectAccessFilter;
 
 
     @Bean
@@ -94,7 +91,6 @@ public class SecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAfter(projectAccessFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }

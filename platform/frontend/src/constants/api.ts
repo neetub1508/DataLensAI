@@ -25,4 +25,11 @@ export const API_ENDPOINTS = {
   PERMISSIONS: {
     BASE: '/permissions/',
   },
+  PROJECTS: {
+    BASE: '/projects',
+    ACTIVE: '/projects/active',
+    RECENT: '/projects/recent',
+    STATS: '/projects/stats',
+    SEARCH: '/projects/search',
+  },
 } as const

@@ -198,6 +198,56 @@ class ApiClient {
     return response.data
   }
 
+  // Project methods
+  async getAllProjects() {
+    const response = await this.client.get(API_ENDPOINTS.PROJECTS.BASE)
+    return response.data
+  }
+
+  async getActiveProjects() {
+    const response = await this.client.get(API_ENDPOINTS.PROJECTS.ACTIVE)
+    return response.data
+  }
+
+  async getProjectById(projectId: string) {
+    const response = await this.client.get(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`)
+    return response.data
+  }
+
+  async createProject(data: { name: string; description?: string; isActive: boolean }) {
+    const response = await this.client.post(API_ENDPOINTS.PROJECTS.BASE, data)
+    return response.data
+  }
+
+  async updateProject(projectId: string, data: { name: string; description?: string; isActive: boolean }) {
+    const response = await this.client.put(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`, data)
+    return response.data
+  }
+
+  async deleteProject(projectId: string) {
+    const response = await this.client.delete(`${API_ENDPOINTS.PROJECTS.BASE}/${projectId}`)
+    return response.data
+  }
+
+  async getRecentProjects(limit = 10) {
+    const response = await this.client.get(API_ENDPOINTS.PROJECTS.RECENT, {
+      params: { limit }
+    })
+    return response.data
+  }
+
+  async getProjectStats() {
+    const response = await this.client.get(API_ENDPOINTS.PROJECTS.STATS)
+    return response.data
+  }
+
+  async searchProjects(query: string) {
+    const response = await this.client.get(API_ENDPOINTS.PROJECTS.SEARCH, {
+      params: { q: query }
+    })
+    return response.data
+  }
+
 }
 
 export const apiClient = new ApiClient()

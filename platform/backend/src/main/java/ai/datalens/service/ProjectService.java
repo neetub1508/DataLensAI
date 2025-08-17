@@ -166,6 +166,30 @@ public class ProjectService {
     }
 
     /**
+     * Get all projects for admin
+     */
+    public List<ProjectResponse> getAllProjects() {
+        List<Project> projects = projectRepository.findAllWithUser();
+        return projects.stream()
+                .map(this::convertToProjectResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Update project status (admin only)
+     */
+    public void updateProjectStatus(String projectId, Boolean isActive, UUID adminUserId) {
+        UUID projectUuid = UUID.fromString(projectId);
+        Project project = projectRepository.findById(projectUuid)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        
+        project.setIsActive(isActive);
+        project.setUpdateDate(LocalDateTime.now());
+        project.setUpdateBy(adminUserId);
+        projectRepository.save(project);
+    }
+
+    /**
      * Convert Project entity to ProjectResponse DTO
      */
     private ProjectResponse convertToProjectResponse(Project project) {

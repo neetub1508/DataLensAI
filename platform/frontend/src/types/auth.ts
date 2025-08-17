@@ -1,12 +1,12 @@
 export interface User {
   id: string
   email: string
-  is_verified: boolean
+  isVerified: boolean
   status: string
   locale: string
-  created_at: string
-  updated_at: string
-  last_login_at?: string
+  createdAt: string
+  updatedAt: string
+  lastLoginAt?: string
   roles: string[]
 }
 

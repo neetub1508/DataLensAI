@@ -100,4 +100,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * Search users by email containing (case-insensitive)
      */
     Page<User> findByEmailContainingIgnoreCase(String email, Pageable pageable);
+
+    /**
+     * Find all users with roles eagerly loaded
+     */
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles")
+    List<User> findAllWithRoles();
 }

@@ -141,4 +141,10 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
      */
     @Query("SELECT p FROM Project p WHERE p.user = :user AND p.isActive = true ORDER BY p.updateDate DESC")
     Page<Project> findActiveProjectsByUserOrderByUpdateDateDesc(@Param("user") User user, Pageable pageable);
+
+    /**
+     * Find all projects with user eagerly loaded (for admin)
+     */
+    @Query("SELECT p FROM Project p LEFT JOIN FETCH p.user ORDER BY p.updateDate DESC")
+    List<Project> findAllWithUser();
 }

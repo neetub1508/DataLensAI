@@ -32,6 +32,27 @@ const navigation = [
   }
 ]
 
+const blogNavigation = [
+  {
+    name: 'My Posts',
+    href: '/dashboard/blog',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    )
+  },
+  {
+    name: 'New Post',
+    href: '/dashboard/blog/new',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+      </svg>
+    )
+  }
+]
+
 const adminNavigation = [
   {
     name: 'Admin Settings',
@@ -119,6 +140,34 @@ export default function DashboardSidebar({ isOpen, onToggle }: SidebarProps) {
                 </Link>
               )
             })}
+
+            {/* Blog Section */}
+            <div className="pt-6">
+              <h3 className="px-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Blog
+              </h3>
+              <div className="mt-1 space-y-1">
+                {blogNavigation.map((item) => {
+                  const isActive = pathname === item.href
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors ${
+                        isActive
+                          ? 'bg-blue-100 dark:bg-blue-800 text-blue-900 dark:text-blue-100'
+                          : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <span className={`mr-3 ${isActive ? 'text-blue-500 dark:text-blue-300' : 'text-gray-400 group-hover:text-gray-500'}`}>
+                        {item.icon}
+                      </span>
+                      {item.name}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
 
             {/* Admin Section */}
             {isAdmin && (

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth'
 import DashboardSidebar from '@/components/layouts/dashboard-sidebar'
+import { Dashboard } from '@/components/pages/dashboard'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -17,7 +18,6 @@ export default function DashboardPage() {
     }
   }, [isAuthenticated, router])
 
-
   if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -25,7 +25,6 @@ export default function DashboardPage() {
       </div>
     )
   }
-
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -78,37 +77,7 @@ export default function DashboardPage() {
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto">
           <div className="p-6">
-
-            {/* Feature Cards */}
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-
-
-              {user.roles?.includes('admin') && (
-                <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow cursor-pointer">
-                  <div className="p-5">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        <div className="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
-                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="ml-5 w-0 flex-1">
-                        <dl>
-                          <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                            Admin Panel
-                          </dt>
-                          <dd className="text-lg font-medium text-gray-900 dark:text-white">
-                            Manage Users
-                          </dd>
-                        </dl>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            <Dashboard />
           </div>
         </main>
       </div>

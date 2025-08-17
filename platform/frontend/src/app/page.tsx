@@ -2,12 +2,12 @@
 
 import { useAuthStore } from '@/store/auth'
 import { PublicLayout } from '@/components/layouts/public-layout'
-import { DashboardLayout } from '@/components/layouts/dashboard-layout'
 import { HomePage } from '@/components/pages/home'
-import { Dashboard } from '@/components/pages/dashboard'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
+  const router = useRouter()
   const { isAuthenticated, user, isLoading } = useAuthStore()
   const [mounted, setMounted] = useState(false)
 
@@ -16,11 +16,11 @@ export default function Page() {
   }, [])
 
   useEffect(() => {
-    if (mounted) {
-      // Auth state is already initialized by the store
-      // No need to call refreshUser here to avoid duplicate calls
+    if (mounted && isAuthenticated && user) {
+      // Redirect authenticated users to dashboard
+      router.push('/dashboard')
     }
-  }, [mounted, isAuthenticated])
+  }, [mounted, isAuthenticated, user, router])
 
   // Show loading spinner during initial mount and auth loading
   if (!mounted || isLoading) {
@@ -31,12 +31,12 @@ export default function Page() {
     )
   }
 
-  // Show dashboard for authenticated users
+  // Redirect authenticated users (this should not render due to useEffect redirect)
   if (isAuthenticated && user) {
     return (
-      <DashboardLayout>
-        <Dashboard />
-      </DashboardLayout>
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      </div>
     )
   }
 

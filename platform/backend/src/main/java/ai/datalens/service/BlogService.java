@@ -216,6 +216,11 @@ public class BlogService {
             .collect(Collectors.toList());
     }
     
+    public Optional<BlogPostResponse> getPostForAdminReview(UUID postId) {
+        Optional<BlogPost> post = blogPostRepository.findById(postId);
+        return post.map(this::convertToResponseWithCategories);
+    }
+    
     // Helper methods
     private String generateSlug(String title) {
         String baseSlug = title.toLowerCase()

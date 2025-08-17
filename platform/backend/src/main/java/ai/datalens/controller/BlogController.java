@@ -154,4 +154,12 @@ public class BlogController {
         List<BlogCategoryResponse> categories = blogService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
+    
+    @GetMapping("/admin/posts/{postId}")
+    @PreAuthorize("hasAuthority('blog:approve')")
+    public ResponseEntity<BlogPostResponse> getPostForReview(@PathVariable UUID postId) {
+        return blogService.getPostForAdminReview(postId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

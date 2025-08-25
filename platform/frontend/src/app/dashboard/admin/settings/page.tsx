@@ -329,19 +329,19 @@ export default function AdminSettingsPage() {
                                   </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full $\{
+                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                     userItem.status === 'ACTIVE' 
                                       ? 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
-                                      : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
+                                      : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-200 dark:border dark:border-red-800'
                                   }`}>
                                     {userItem.status}
                                   </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full $\{
+                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                     userItem.isVerified 
                                       ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100'
-                                      : 'bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100'
+                                      : 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-200 dark:border dark:border-orange-800'
                                   }`}>
                                     {userItem.isVerified ? 'Verified' : 'Unverified'}
                                   </span>

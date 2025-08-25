@@ -121,6 +121,27 @@ app:
     requests-per-minute: 60
     requests-per-hour: 1000
 
+# Snowflake Configuration
+snowflake:
+  url: ${SNOWFLAKE_URL:}
+  user: ${SNOWFLAKE_USER:}
+  password: ${SNOWFLAKE_PASSWORD:}
+  database: ${SNOWFLAKE_DATABASE:}
+  schema: ${SNOWFLAKE_SCHEMA:PUBLIC}
+  warehouse: ${SNOWFLAKE_WAREHOUSE:COMPUTE_WH}
+  role: ${SNOWFLAKE_ROLE:}
+  driver: ${SNOWFLAKE_DRIVER:net.snowflake.client.jdbc.SnowflakeDriver}
+  connection-timeout: ${SNOWFLAKE_CONNECTION_TIMEOUT:60000}
+  network-timeout: ${SNOWFLAKE_NETWORK_TIMEOUT:300000}
+  query-timeout: ${SNOWFLAKE_QUERY_TIMEOUT:300000}
+  login-timeout: ${SNOWFLAKE_LOGIN_TIMEOUT:60000}
+  ssl: ${SNOWFLAKE_SSL:on}
+  validate-default-parameters: ${SNOWFLAKE_VALIDATE_DEFAULT_PARAMETERS:true}
+  max-pool-size: ${SNOWFLAKE_MAX_POOL_SIZE:10}
+  min-pool-size: ${SNOWFLAKE_MIN_POOL_SIZE:2}
+  initial-pool-size: ${SNOWFLAKE_INITIAL_POOL_SIZE:2}
+  application: ${SNOWFLAKE_APPLICATION:DataLensAI}
+
 ---
 # Development Profile
 spring:

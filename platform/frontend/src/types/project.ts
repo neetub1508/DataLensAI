@@ -31,3 +31,16 @@ export interface ProjectState {
   isLoading: boolean
   error: string | null
 }
+
+export interface SnowflakeStage {
+  stage_name: string
+  stage_schema: string
+  stage_database: string
+  stage_type: string
+  stage_location: string
+  file_format?: string
+  copy_options?: string
+  comment?: string
+  owner: string
+  created: string
+}

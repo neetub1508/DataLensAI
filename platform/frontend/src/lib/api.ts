@@ -248,6 +248,28 @@ class ApiClient {
     return response.data
   }
 
+  // Snowflake Stages methods
+  async getProjectStages(projectId: string) {
+    const response = await this.client.get(`/projects/${projectId}/stages`)
+    return response.data
+  }
+
+  async refreshProjectStages(projectId: string) {
+    const response = await this.client.post(`/projects/${projectId}/stages/refresh`)
+    return response.data
+  }
+
+  async getActiveProjectStages(projectId: string) {
+    const response = await this.client.get(`/projects/${projectId}/stages/active`)
+    return response.data
+  }
+
+  async getProjectStagesCount(projectId: string) {
+    const response = await this.client.get(`/projects/${projectId}/stages/count`)
+    return response.data
+  }
+
 }
 
 export const apiClient = new ApiClient()
+export const api = apiClient // Alternative export for convenience

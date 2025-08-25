@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Project } from '@/types/project'
 import { useProjectStore } from '@/store/project'
 import EditProjectModal from './edit-project-modal'
@@ -11,6 +12,7 @@ interface ProjectListItemProps {
 }
 
 export default function ProjectListItem({ project }: ProjectListItemProps) {
+  const router = useRouter()
   const { deleteProject } = useProjectStore()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -26,6 +28,12 @@ export default function ProjectListItem({ project }: ProjectListItemProps) {
         setIsDeleting(false)
       }
     }
+  }
+
+  const handleProjectClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    router.push(`/dashboard/projects/${project.id}/stages`)
   }
 
   const formatDate = (dateString: string) => {
@@ -48,11 +56,15 @@ export default function ProjectListItem({ project }: ProjectListItemProps) {
 
   return (
     <>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow p-6 border border-gray-200 dark:border-gray-700">
+      <div 
+        className="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow p-6 border border-gray-200 dark:border-gray-700 cursor-pointer"
+        onClick={handleProjectClick}
+        title="Click to view project stages"
+      >
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white truncate">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white truncate hover:text-green-600 dark:hover:text-green-400 transition-colors">
                 {project.name}
               </h3>
               <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
@@ -94,7 +106,11 @@ export default function ProjectListItem({ project }: ProjectListItemProps) {
           
           <div className="flex items-center space-x-2 ml-4">
             <button
-              onClick={() => setIsEditModalOpen(true)}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setIsEditModalOpen(true)
+              }}
               className="p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               title="Edit project"
             >
@@ -104,7 +120,11 @@ export default function ProjectListItem({ project }: ProjectListItemProps) {
             </button>
             
             <button
-              onClick={handleDelete}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                handleDelete()
+              }}
               disabled={isDeleting}
               className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="Delete project"
